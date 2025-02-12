@@ -82,8 +82,6 @@
         <div id="outputMessage" class="footer"></div>
     </div>
 
-    <!-- EmailJS Script -->
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
     <script>
         // Compliment Generator
         const compliments = [
@@ -97,9 +95,6 @@
         const randomCompliment = compliments[Math.floor(Math.random() * compliments.length)];
         document.getElementById("compliment").innerText = randomCompliment;
 
-        // Initialize EmailJS
-        emailjs.init("rtkZeRh69f6xJMkaM"); // Your public key
-
         // Sending the User's Message
         function sendMessage() {
             const toName = document.getElementById("to_name").value;
@@ -107,16 +102,22 @@
             const userMessage = document.getElementById("message").value;
 
             if (toName && fromName && userMessage) {
-                // Send email via EmailJS
-                emailjs.send("service_7ps40yr", "template_go0gdu8", {
-                    to_name: toName,
-                    from_name: fromName,
-                    message: userMessage
-                }).then(function(response) {
-                    console.log("Success!", response);
+                fetch('http://localhost:3000/send-message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to_name: toName,
+                        from_name: fromName,
+                        message: userMessage,
+                    }),
+                })
+                .then(response => response.text())
+                .then(data => {
                     document.getElementById("outputMessage").innerText = "Your message has been sent! 💌";
-                }, function(error) {
-                    console.log("Failed...", error);
+                })
+                .catch(error => {
                     document.getElementById("outputMessage").innerText = "There was an error. Please try again!";
                 });
             } else {
