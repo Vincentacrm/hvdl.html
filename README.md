@@ -106,6 +106,12 @@
             const fromName = document.getElementById("from_name").value;
             const userMessage = document.getElementById("message").value;
 
+            console.log({
+                to_name: toName,
+                from_name: fromName,
+                message: userMessage
+            });
+
             if (toName && fromName && userMessage) {
                 // Send email via EmailJS
                 emailjs.send("service_7ps40yr", "template_go0gdu8", {
